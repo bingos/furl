@@ -1,0 +1,43 @@
+furl
+----
+
+A small utility designed to display the HTTP headers returned by web-servers in response to client requests.
+
+Usage: furl [OPTIONS] [URL] [filename]
+Where URL is in the format:
+
+      [http://]www.foobar.com[:80][/example.html]
+
+
+Options currently include the following:
+
+-f, --file     specify an input file containing URLs
+-b, --body     output the contents of HTTP request and the header
+-V, --version  output version information and exit
+-h, --help     display this help message and exit
+-i, --ie       pretend to be Internet Explorer
+-m, --mozilla  pretend to be Mozilla
+
+
+Compiling
+---------
+
+This version of furl uses the Autoconf and Automake. On UNIX-like hosts try the following:
+
+$ ./configure
+$ make
+$ su
+# make install
+
+On Windows ( >= Windows 95 ) there are configuration files in the Win32 sub-directory for compiling with:
+
+Mingw32 - mingw32.bat
+Borland C++ - borland.bat
+MS Visual C++ - vcmake.bat
+
+Change directories to the Win32 sub-directory and run the applicable batch file.
+
+It is also possible to cross-compile using Mingw32 on GNU/Linux by altering the Win32/Makefile.mingw32 file.
+
+Kidney Bingos
+chris@bingosnet.co.uk
