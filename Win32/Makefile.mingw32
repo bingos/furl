@@ -23,7 +23,7 @@
 CC = gcc
 DEFS = -DWIN32
 CFLAGS = -O3 -Wall -I.
-LINKOPTS = -lwsock32
+LINKOPTS = -lwsock32 -lws2_32
 
 # Cygwin32 - Cygnus GNU C Compiler for Win32
 # CC = gcc
