@@ -1,6 +1,6 @@
 /*
  * furl
- * Copyright (C) 1999 BingosNET Produktions Ltd
+ * Copyright (C) 2017 BingosNET Produktions Ltd
  * Written by Kidney Bingos aka Chris Williams
  * <chris@bingosnet.co.uk>
  * With some components borrowed from the Free Software Foundation
@@ -151,30 +151,52 @@ int GetAddress (unsigned long *ipAddr, char hostname[])
 	return 0;
 }
 
-SOCKET CreateSocket (unsigned long *ipAddr, char port[])
+SOCKET CreateSocket (char hostname[], char port[])
 {
 
-	struct sockaddr_in sa;
+  struct addrinfo *ai;
+  int              aiErr;
+  struct addrinfo *aiHead;
+  struct addrinfo  hints;
+  int              sckt;
 	SOCKET sock;
 
-	sock = socket (AF_INET,SOCK_STREAM,IPPROTO_TCP);
-	if (sock == INVALID_SOCKET) {
-		return INVALID_SOCKET;
-	}
+  memset( &hints, 0, sizeof( hints ) );
+  hints.ai_family   = PF_UNSPEC;     /* IPv4 or IPv6 records (don't care). */
+  hints.ai_socktype = SOCK_STREAM;   /* Connection-oriented byte stream.   */
+  hints.ai_protocol = IPPROTO_TCP;   /* TCP transport layer protocol only. */
 
-	sa.sin_family = AF_INET;
-	sa.sin_addr.s_addr = htonl(*ipAddr);
-	sa.sin_port = htons(atoi(port));
+  if ( ( aiErr = getaddrinfo( hostname,
+                              port,
+                              &hints,
+                              &aiHead ) ) != 0 )
+  {
+    fprintf(stderr,"Bad Magic. %s", gai_strerror( aiErr ) );
+    return INVALID_SOCKET;
+  }
 
-	if (connect(sock,(struct sockaddr*)&sa,sizeof(sa)) == SOCKET_ERROR) {
+  for ( ai = aiHead,   sckt = INVALID_SOCKET;
+        ( ai != NULL ) && ( sckt == INVALID_SOCKET );
+        ai = ai->ai_next )
+  {
+
+	  sock = socket (ai->ai_family,ai->ai_socktype,ai->ai_protocol);
+	  if (sock == INVALID_SOCKET) {
+      sock = INVALID_SOCKET;
+      continue;
+	  }
+
+	  if (connect(sock,ai->ai_addr,ai->ai_addrlen) == SOCKET_ERROR) {
 #ifdef WIN32
-		closesocket(sock);
+		  closesocket(sock);
 #else
-		close(sock);
+		  close(sock);
 #endif
-		return INVALID_SOCKET;
-	}
-
+      sock = INVALID_SOCKET;
+		  continue;
+	  }
+  }
+  freeaddrinfo( aiHead );
 	return sock;
 
 }

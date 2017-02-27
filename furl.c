@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	char hostname[1024];
 	char fileurl[1024];
 	char method[5] = "HEAD";
-	char useragent[100] = "Furl/2.1";
+	char useragent[100] = "Furl/3.0";
 
 	/* Let's see if it works */
 	unsigned long ipAddr;
@@ -141,23 +141,17 @@ int main(int argc, char *argv[])
 			if (length > 1 || length == -1) {
 				if (!parseurl(fileurl,protocol,hostname,port,path,method,useragent)) {
 
-					if (GetAddress(&ipAddr, hostname)) {
-						fprintf(stderr,"%s doesn't exist\n",hostname);
-						fprintf(stderr,"Try '%s --help' for more information.\n",progname);
+					sock = CreateSocket(hostname,port);
+					if (sock == INVALID_SOCKET) {
+						fprintf(stderr,"Bad Magic. Couldn\'t get a socket connection\n");
 					} else {
-						sock = CreateSocket(&ipAddr,port);
-						if (sock == INVALID_SOCKET) {
-							fprintf(stderr,"Bad Magic. Couldn\'t get a socket connection\n");
-						} else {
-							if (ProcessSocket(sock, path) == SOCKET_ERROR) {
-								fprintf(stderr,"Bad Magic. Encountered an error connecting to socket\n");
+						if (ProcessSocket(sock, path) == SOCKET_ERROR) {
+							fprintf(stderr,"Bad Magic. Encountered an error connecting to socket\n");
 #ifdef WIN32
-								Win32Cleanup();
+							Win32Cleanup();
 #endif
-								exit(1);
-							}
+							exit(1);
 						}
-
 					}
 
 				} else {
