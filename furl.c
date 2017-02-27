@@ -1,19 +1,19 @@
 /*
- * furl 
- * Copyright (C) 1999 BingosNET Produktions Ltd
+ * furl
+ * Copyright (C) 2017 BingosNET Produktions Ltd
  * Written by Kidney Bingos aka Chris Williams
- * <chris@kidney-bingos.demon.co.uk> 
- * 
+ * <chris@bingosnet.co.uk>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
@@ -30,7 +30,7 @@
 int main(int argc, char *argv[])
 {
 
-	static struct option options[] = 
+	static struct option options[] =
 	{
 		{"body", no_argument,NULL,'b'},
 		{"version", no_argument,NULL,'V'},
@@ -62,12 +62,12 @@ int main(int argc, char *argv[])
 	Win32Init();
 #endif
 
-	progname = basename(argv[0]);	
+	progname = basename(argv[0]);
 	strlwr(progname);
 
 	while ((opt=getopt_long(argc,argv,optstring,options,NULL)) != EOF ) {
 		switch (opt) {
-			
+
 			case 'i':
 				strcpy(useragent, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;)");
 				break;
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 				return 1;
 		}
 	}
-	
+
 	file_count = argc - optind;
 
 	fileind = optind++;
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 					length = strlen(fileurl);
 					fileurl[length-1] = '\0';
 					fprintf(stdout,"\nURL= %s\n\n", fileurl);
-				}	
+				}
 			} else {
 				length = -1;
 				strcpy(fileurl, argv[fileind]);
@@ -155,11 +155,11 @@ int main(int argc, char *argv[])
 								Win32Cleanup();
 #endif
 								exit(1);
-							}								
+							}
 						}
 
 					}
-					
+
 				} else {
 					fprintf(stderr,"Protocol not supported\n");
 					fprintf(stderr,"Try '%s --help' for more information.\n",progname);
